@@ -1,4 +1,18 @@
+---
+title: "CiteFaith: Citation Faithfulness Checker"
+emoji: "🔍"
+colorFrom: "blue"
+colorTo: "purple"
+sdk: gradio
+sdk_version: "4.44.0"
+python_version: "3.11"
+app_file: app.py
+pinned: false
+license: mit
+---
+
 # Citation Faithfulness Checker
+...
 
 Open-source citation faithfulness checker: extracts claims, retrieves evidence, verifies via NLI. Fully open-source models and data (RAGBench, HoVer, SciFact).
 
