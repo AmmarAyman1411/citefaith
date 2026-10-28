@@ -1,63 +1,45 @@
----
-title: "CiteFaith: Citation Faithfulness Checker"
-emoji: "🔍"
-colorFrom: "blue"
-colorTo: "purple"
-sdk: gradio
-sdk_version: "4.44.0"
-python_version: "3.11"
-app_file: app.py
-pinned: false
-license: mit
----
-
 # Citation Faithfulness Checker
-...
 
 Open-source citation faithfulness checker: extracts claims, retrieves evidence, verifies via NLI. Fully open-source models and data (RAGBench, HoVer, SciFact).
 
-## Quick Start
+## Quick Start (Streamlit UI)
 
 ```powershell
-# Python 3.11+
 pip install -r requirements.txt
+$env:PYTHONPATH="src"
+streamlit run streamlit_app.py
+```
+
+Opens at `http://localhost:8501`
+
+### Docker (Optional)
+
+```powershell
+docker build -t citefaith -f docker/Dockerfile .
+docker run -p 8000:8000 citefaith
+```
+
+---
+
+## API (FastAPI)
+
+```powershell
 $env:PYTHONPATH="src"
 uvicorn citefaith.api:app --host 0.0.0.0 --port 8000
 ```
 
-Test at `http://127.0.0.1:8000/docs`
-
-### Docker
-
-```powershell
-# Build from repo root
-docker build -t citefaith -f docker/Dockerfile .
-
-# Run
-docker run -p 8000:8000 citefaith
-
-# Or with Compose
-docker-compose up --build
-```
+**Endpoints:**
+- `POST /check` — JSON body `{"text": "...", "sources": ["..."]}`
+- `POST /check/files` — multipart: `text_file` + `source_file`
 
 ---
 
-## API
+## Deploy to Streamlit Cloud (Free, No Docker)
 
-### POST /check (JSON)
-```bash
-curl -X POST http://localhost:8000/check \
-  -H "Content-Type: application/json" \
-  -d '{"text": "...", "sources": ["..."]}'
-```
-
-### POST /check/files (Multipart)
-```bash
-curl -X POST http://localhost:8000/check/files \
-  -F "text_file=@claims.txt" -F "source_file=@sources.txt"
-```
-
-**Verdicts:** `supported` | `contradicted` | `neutral`
+1. Push to GitHub
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Connect GitHub repo → main branch → `streamlit_app.py`
+4. Deploy (3 minutes)
 
 ---
 
@@ -71,16 +53,6 @@ curl -X POST http://localhost:8000/check/files \
 | `CONTRA_THRESHOLD` | `0.5` | Contradiction threshold |
 | `CONTRA_MIN_SIM` | `0.5` | Min similarity for contradiction |
 | `SIM_THRESHOLD` | `0.7` | Similarity fallback threshold |
-
----
-
-## Deploy to Hugging Face Spaces
-
-1. Move Dockerfile to root: `Move-Item "docker\Dockerfile" "Dockerfile"`
-2. Push to GitHub: `gh repo create citefaith --public --source=. --push`
-3. Create HF Space → Docker → connect repo
-
-HF builds in cloud (~10-15 min first build).
 
 ---
 
@@ -103,6 +75,7 @@ scripts/           # eval, training, diagnostics
 tests/             # smoke tests
 data/              # RAGBench datasets (gitignored)
 docker/            # Dockerfile, docker-compose.yml
+.streamlit/        # Streamlit config
 ```
 
 ---
