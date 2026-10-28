@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  citefaith:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app/src
+      - NLI_MODEL=cross-encoder/nli-deberta-v3-small
+      - RETRIEVER_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - ENT_THRESHOLD=0.5
+      - CONTRA_THRESHOLD=0.5
+      - CONTRA_MIN_SIM=0.5
+      - SIM_THRESHOLD=0.7
+    restart: unless-stopped
